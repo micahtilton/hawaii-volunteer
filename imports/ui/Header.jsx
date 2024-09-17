@@ -14,7 +14,7 @@ const navigation = [
   { name: "Home", href: "/", protected: false },
   { name: "Impact", href: "#", protected: false },
   { name: "Contact", href: "#", protected: false },
-  { name: "Profile", href: "/user/profile", protected: true },
+  { name: "Profile", href: "/profile", protected: true },
 ];
 
 export default function Header() {
