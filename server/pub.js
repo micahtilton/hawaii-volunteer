@@ -88,7 +88,7 @@ Meteor.methods({
         });
       }
     }
-    
+
     EventsCollection.updateAsync(eventId, { $set: { completed: true } });
 
     const users = await Meteor.users.find({}).fetch();
@@ -117,5 +117,89 @@ Meteor.methods({
     });
 
     return eventId;
+  },
+
+  async GetEmbedding(inputs) {
+    const openAiResponse = await fetch("https://api.openai.com/v1/embeddings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Meteor.settings.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        input: inputs,
+        model: "text-embedding-ada-002",
+      }),
+    });
+
+    const data = await openAiResponse.json();
+    const embeddings = data.data.map((item) => item.embedding);
+
+    return embeddings;
+  },
+
+  async SortEventsByEmbedding(events) {
+    const eventStrings = events.map((event) => {
+      const eventString = `${event.description} ${event.title} ${
+        event.location
+      } ${event.summary} ${event.skills.join(", ")}`;
+      return eventString;
+    })
+
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error("User not found");
+    }
+
+    const user = await Meteor.users.findOneAsync(userId);
+    const userString = `${user.bio} ${user.skills.join(", ")}`;
+
+    const originalEvents = events;
+    const eventsEmbedding = await Meteor.call("GetEmbedding", eventStrings);
+    const bioEmbedding = (await Meteor.call("GetEmbedding", [userString]))[0];
+
+    const cosineSimilarity = (a, b) => {
+      const dotProduct = a.reduce((sum, val, i) => sum + val * b[i], 0);
+      const magnitudeA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
+      const magnitudeB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
+      return dotProduct / (magnitudeA * magnitudeB);
+    };
+
+    const sortedEvents = originalEvents
+      .map((event, index) => ({ event, similarity: cosineSimilarity(eventsEmbedding[index], bioEmbedding) }))
+      .sort((a, b) => b.similarity - a.similarity)
+      .map(({ event }) => event);
+    
+    return sortedEvents
+  },
+
+  async EventToBioSimilarity(event) {
+    const eventString = `${event.description} ${event.title} ${
+      event.location
+    } ${event.summary} ${event.skills.join(", ")}`;
+
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error("User not found");
+    }
+
+    const user = await Meteor.users.findOneAsync(userId);
+    const userString = `${user.bio} ${user.skills.join(", ")}`;
+
+    const [eventEmbedding, userEmbedding] = await Meteor.call("GetEmbedding", [
+      eventString,
+      userString,
+    ]);
+
+    const cosineSimilarity = (a, b) => {
+      const dotProduct = a.reduce((sum, val, i) => sum + val * b[i], 0);
+      const magnitudeA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
+      const magnitudeB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
+      return dotProduct / (magnitudeA * magnitudeB);
+    };
+
+    const similarity = cosineSimilarity(eventEmbedding, userEmbedding);
+    console.log(similarity);
+    return similarity;
   },
 });
