@@ -3,9 +3,10 @@ import { useTracker } from "meteor/react-meteor-data";
 import { EventsCollection } from "../api/collections";
 import { Tracker } from "meteor/tracker";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for routing
 
 Tracker.autorun(() => {
-  Meteor.subscribe("allEvents");
+  Meteor.subscribe("events.all");
 });
 
 export default SearchEvents = () => {
@@ -18,6 +19,12 @@ export default SearchEvents = () => {
     event.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleEventClick = (id) => {
+    navigate(`/events/${id}`); // Route to the event detail page
+  };
+
   return (
     <div className="container mx-auto">
       <input
@@ -29,7 +36,13 @@ export default SearchEvents = () => {
       />
       <ul role="list" className="divide-y divide-gray-200">
         {filteredEvents.map((event) => (
-          <li key={event.title} className="flex justify-between gap-x-6 py-5">
+          <li
+            key={event._id}
+            className="flex justify-between gap-x-6 p-4 cursor-pointer hover:bg-gray-100"
+            onClick={() => handleEventClick(event._id)}
+          >
+            {" "}
+            {/* Add onClick to li */}
             <div className="flex min-w-0 gap-x-4">
               <img
                 alt={event.title}
@@ -41,19 +54,22 @@ export default SearchEvents = () => {
                   {event.title}
                 </p>
                 <p className="mt-1 text-xs leading-5 text-gray-500">
-                  {event.date} - {event.location}
+                  {event.location}
                 </p>
                 <p className="mt-1 text-xs leading-5 text-gray-500">
-                  {event.description}
+                  {event.summary}
+                </p>
+                <p className="mt-2 text-xs text-gray-500">
+                  Recommended Skills: {event.skills.join(", ")}
                 </p>
                 <p className="mt-1 text-xs leading-5 text-gray-500">
                   Contact: {event.contact}
                 </p>
                 <p className="mt-1 text-xs leading-5 text-gray-500">
-                  Time: {event.time}
+                  Start: {event.startDate.toLocaleString()}
                 </p>
                 <p className="mt-1 text-xs leading-5 text-gray-500">
-                  id: {event._id}
+                  End: {event.endDate.toLocaleString()}
                 </p>
               </div>
             </div>

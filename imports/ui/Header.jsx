@@ -14,13 +14,20 @@ const navigation = [
   { name: "Home", href: "/", protected: false },
   { name: "Impact", href: "#", protected: false },
   { name: "Contact", href: "#", protected: false },
-  { name: "Profile", href: "/profile", protected: true },
+  { name: "Organization", href: "/organization", protected: true, role: "ORG" },
+  { name: "Profile", href: "/profile", protected: true},
 ];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const user = useTracker(() => Meteor.user(), []);
-  const loggedIn = !!user;
+
+  const user = useTracker(() => {
+    const user = Meteor.user();
+    const roles = Roles.getRolesForUser(user?._id);
+    return { ...user, roles }; // Combine user and roles into one object
+  }, []);
+
+  const loggedIn = !!user._id;
 
   return (
     <header className="">
@@ -49,8 +56,9 @@ export default function Header() {
           </button>
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
-          {navigation.map((item) => (
-            (!item.protected || loggedIn) && (
+          {navigation.map((item) => {
+            const hasAccess = !item.protected || (loggedIn && (!item.role || user.roles.includes(item.role)));
+            return hasAccess ? (
               <a
                 key={item.name}
                 href={item.href}
@@ -58,8 +66,11 @@ export default function Header() {
               >
                 {item.name}
               </a>
-            )
-          ))}
+            ) : null;
+          })}
+          <a href="/events">
+            <MagnifyingGlassCircleIcon className="h-6 w-6" />
+          </a>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {!loggedIn ? (

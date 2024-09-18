@@ -46,46 +46,61 @@ const events = [
     title: "Beach Cleanup",
     date: "2023-11-15",
     location: "Waikiki Beach, Honolulu",
-    description: "Join us for a day of cleaning up our beautiful beach and protecting marine life.",
-    time: "9:00 AM - 12:00 PM",
+    description: "Join us for a day of cleaning up our beautiful beach and protecting marine life. This event is crucial for maintaining the health of our coastal ecosystems. Volunteers will work together to collect trash and debris that threaten marine habitats. By participating, you will help create a cleaner environment for both wildlife and beachgoers. Together, we can make a significant impact on our local community.",
+    summary: "A community effort to clean and protect Waikiki Beach.",
+    startDate: new Date("2023-11-15T09:00:00"),
+    endDate: new Date("2023-11-15T12:00:00"),
     contact: "beachcleanup@volunteerhawaii.org",
-    image: "volunteer.jpg"
+    image: "/volunteer.jpg",
+    skills: ["Teamwork", "Environmental Awareness", "Physical Fitness"]
   },
   {
     title: "Tree Planting",
     date: "2023-12-01",
     location: "Kualoa Regional Park, Oahu",
-    description: "Help us plant native trees to restore the ecosystem.",
-    time: "8:00 AM - 3:00 PM",
+    description: "Help us plant native trees to restore the ecosystem. This event is essential for enhancing biodiversity in our area. Volunteers will learn about the importance of native species and their role in the environment. Together, we will plant trees that provide habitat for wildlife and improve air quality. Join us in making a lasting difference in our community's landscape.",
+    summary: "Planting native trees to restore local ecosystems.",
+    startDate: new Date("2023-12-01T08:00:00"),
+    endDate: new Date("2023-12-01T15:00:00"),
     contact: "treeplanting@volunteerhawaii.org",
-    image: "volunteer.jpg"
+    image: "/volunteer.jpg",
+    skills: ["Gardening", "Environmental Awareness", "Teamwork"]
   },
   {
     title: "Food Drive",
     date: "2023-11-20",
     location: "Aloha Stadium, Honolulu",
-    description: "Collecting non-perishable food items for local families in need.",
-    time: "10:00 AM - 4:00 PM",
+    description: "Collecting non-perishable food items for local families in need. This event aims to support those who are struggling to put food on the table. Volunteers will help organize donations and distribute food to families. Your contribution can make a significant difference in the lives of many. Join us in our mission to alleviate hunger in our community.",
+    summary: "Collecting food items to support local families in need.",
+    startDate: new Date("2023-11-20T10:00:00"),
+    endDate: new Date("2023-11-20T16:00:00"),
     contact: "fooddrive@volunteerhawaii.org",
-    image: "volunteer.jpg"
+    image: "/volunteer.jpg",
+    skills: ["Organization", "Communication", "Teamwork"]
   },
   {
     title: "Community Garden Day",
     date: "2023-11-25",
     location: "Maui Community Garden, Wailuku",
-    description: "Help us maintain our community garden and learn about sustainable gardening.",
-    time: "9:00 AM - 1:00 PM",
+    description: "Help us maintain our community garden and learn about sustainable gardening. This event is a great opportunity to connect with nature and fellow gardening enthusiasts. Volunteers will assist in planting, weeding, and harvesting. By participating, you will gain valuable skills in sustainable practices. Together, we can create a thriving garden that benefits our community.",
+    summary: "Maintaining and learning about sustainable gardening practices.",
+    startDate: new Date("2023-11-25T09:00:00"),
+    endDate: new Date("2023-11-25T13:00:00"),
     contact: "communitygarden@volunteerhawaii.org",
-    image: "volunteer.jpg"
+    image: "/volunteer.jpg",
+    skills: ["Gardening", "Sustainability", "Teamwork"]
   },
   {
     title: "Ocean Conservation Workshop",
     date: "2023-12-10",
     location: "Hanauma Bay, Oahu",
-    description: "Learn about ocean conservation efforts and how you can help.",
-    time: "1:00 PM - 4:00 PM",
+    description: "Learn about ocean conservation efforts and how you can help. This workshop will cover various topics related to marine ecosystems and conservation strategies. Participants will engage in discussions and hands-on activities. Your involvement can lead to positive changes in ocean health. Join us to become an advocate for our oceans.",
+    summary: "Workshop focused on ocean conservation and advocacy.",
+    startDate: new Date("2023-12-10T13:00:00"),
+    endDate: new Date("2023-12-10T16:00:00"),
     contact: "oceanconservation@volunteerhawaii.org",
-    image: "volunteer.jpg"
+    image: "/volunteer.jpg",
+    skills: ["Environmental Awareness", "Public Speaking", "Teamwork"]
   }
 ];
 
@@ -96,6 +111,7 @@ Meteor.startup(async () => {
       console.log("created user: " + JSON.stringify(account))
       const id = await Accounts.createUserAsync(account)
       await Meteor.users.updateAsync(id, {$set: account.details})
+      await Meteor.users.updateAsync(id, {$set: {completedEvents: [], currentEvents: []}})
       for (const role of account.roles) {
         await Roles.createRoleAsync(role, {unlessExists: true});
       }
@@ -104,6 +120,7 @@ Meteor.startup(async () => {
   } else {
     console.log("accounts already created")
   }
+
 
   const eventsCollection = EventsCollection
   const numEvents = await eventsCollection.find({}).countAsync()
