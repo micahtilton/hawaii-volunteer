@@ -58,7 +58,7 @@ export default SearchEvents = () => {
   });
 
   const filteredEvents = events.filter((event) =>
-    event.title.toLowerCase().includes(searchTerm.toLowerCase())
+    !event.completed && event.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const navigate = useNavigate(); // Initialize useNavigate

@@ -77,7 +77,7 @@ const EventDetail = () => {
       <p className="mt-2 text-xs text-gray-500">Start Time: {event.startDate.toLocaleString()}</p>
       <p className="mt-2 text-xs text-gray-500">End Time: {event.endDate.toLocaleString()}</p>
       <p className="mt-2 text-xs text-gray-500">Recommended Skills: {event.skills.join(', ')}</p>
-      {!!user && (
+      {(!!user && !event.completed) && (
         <VolunteerButton
           confirmVolunteer={confirmVolunteer}
           isVolunteering={isVolunteering}

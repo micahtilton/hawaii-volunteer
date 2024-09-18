@@ -9,6 +9,7 @@ import SearchEvents from "./SearchEvents";
 import EventDetail from "./EventDetail";
 import Organization from "./Organization";
 import OrganizationEventDetail from "./OrganizationEventDetail";
+import CreateEventForm from "./CreateEventForm";
 
 const ProtectedRoute = ({ role, element }) => {
   const { user } = useTracker(() => {
@@ -39,6 +40,7 @@ export const App = () => {
         <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
         <Route path="/organization" element={<ProtectedRoute role={"ORG"} element={<Organization />} />} />
         <Route path="/organization/events/:id" element={<ProtectedRoute role={"ORG"} element={<OrganizationEventDetail />} />} />
+        <Route path="/organization/events/create" element={<ProtectedRoute role={"ORG"} element={<CreateEventForm />} />} />
         <Route path="/events/:id" element={<EventDetail />} />
       </Routes>
     </Router>

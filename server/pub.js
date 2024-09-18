@@ -1,5 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import { EventsCollection } from "../imports/api/collections";
+import { Roles } from "meteor/alanning:roles";
 
 Meteor.publish("events.all", function () {
   return EventsCollection.find();
@@ -47,7 +48,7 @@ Meteor.methods({
       $set: { bio: bio },
     });
   },
-  
+
   async UpdateUserSkills(skill, action) {
     const userId = await Meteor.userId();
 
@@ -66,5 +67,55 @@ Meteor.methods({
     } else {
       throw new Meteor.Error("Invalid action");
     }
+  },
+
+  async DeleteEvent(eventId) {
+    await EventsCollection.removeAsync(eventId);
+
+    const users = await Meteor.users.find({}).fetch();
+    for (const user of users) {
+      await Meteor.users.updateAsync(user._id, {
+        $pull: { currentEvents: eventId },
+      });
+    }
+  },
+
+  async CompleteEvent(attendance, eventId) {
+    for (const [id, isAttending] of Object.entries(attendance)) {
+      if (isAttending) {
+        await Meteor.users.updateAsync(id, {
+          $addToSet: { completedEvents: eventId },
+        });
+      }
+    }
+    
+    EventsCollection.updateAsync(eventId, { $set: { completed: true } });
+
+    const users = await Meteor.users.find({}).fetch();
+    for (const user of users) {
+      await Meteor.users.updateAsync(user._id, {
+        $pull: { currentEvents: eventId },
+      });
+    }
+  },
+
+  async CreateEvent(eventData) {
+    const userId = await Meteor.userId();
+
+    if (!userId) {
+      throw new Meteor.Error("User not found");
+    }
+
+    const roles = await Roles.getRolesForUserAsync(userId);
+    if (!roles.includes("ORG")) {
+      throw new Meteor.Error("User does not have the required role");
+    }
+
+    const eventId = await EventsCollection.insertAsync({
+      ...eventData,
+      organizer: userId,
+    });
+
+    return eventId;
   },
 });
