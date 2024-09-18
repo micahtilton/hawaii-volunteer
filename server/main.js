@@ -160,13 +160,14 @@ Meteor.startup(async () => {
 
   const eventsCollection = EventsCollection;
   const numEvents = await eventsCollection.find({}).countAsync();
-
+  console.log(numEvents) 
   if (numEvents === 0) {
     const organizations_cursor = await Roles.getUsersInRoleAsync("ORG");
     const organizations = await organizations_cursor.fetch();
     const organizer = organizations[0];
     if (!!organizer) {
       events.forEach((event) => {
+        console.log(event)
         eventsCollection.insertAsync({
           ...event,
           organizer: organizer._id,
