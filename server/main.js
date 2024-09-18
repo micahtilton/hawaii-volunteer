@@ -166,9 +166,9 @@ Meteor.startup(async () => {
     const organizations = await organizations_cursor.fetch();
     const organizer = organizations[0];
     if (!!organizer) {
-      events.forEach((event) => {
+      events.forEach(async (event) => {
         console.log(event)
-        eventsCollection.insertAsync({
+        await eventsCollection.insertAsync({
           ...event,
           organizer: organizer._id,
         });
@@ -176,3 +176,4 @@ Meteor.startup(async () => {
     }
   }
 });
+
