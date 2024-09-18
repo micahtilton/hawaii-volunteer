@@ -1,9 +1,27 @@
+import { useTracker } from "meteor/react-meteor-data";
 import React from "react";
+import { EventsCollection } from "../api/collections";
+import { EventRow } from "./SearchEvents";
+import { useNavigate } from "react-router-dom";
 
 const Organization = () => {
+  const user = useTracker(() => Meteor.user(), []);
+  const events = useTracker(() => {
+    if (user) {
+      return EventsCollection.find({ organizer: user._id }).fetch();
+    }
+    return [];
+  }, [user]);
+  const navigation = useNavigate()
+
   return (
     <div className="container mx-auto">
-      <h1 className="text-2xl font-bold">Organization Profile</h1>
+      <h1 className="text-2xl font-bold">Your Events</h1>
+      <ul>
+        {events.map(event => (
+          <EventRow event={event} handleEventClick={() => {navigation(`/organization/events/${event._id}`)}}/>
+        ))}
+      </ul>
       <p className="mt-4">
         Welcome to our organization! We are dedicated to community service and environmental protection.
       </p>

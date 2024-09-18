@@ -8,8 +8,7 @@ import Profile from "./Profile";
 import SearchEvents from "./SearchEvents";
 import EventDetail from "./EventDetail";
 import Organization from "./Organization";
-
-
+import OrganizationEventDetail from "./OrganizationEventDetail";
 
 const ProtectedRoute = ({ role, element }) => {
   const { user } = useTracker(() => {
@@ -39,6 +38,7 @@ export const App = () => {
         <Route path="/events" element={<SearchEvents />} />
         <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
         <Route path="/organization" element={<ProtectedRoute role={"ORG"} element={<Organization />} />} />
+        <Route path="/organization/events/:id" element={<ProtectedRoute role={"ORG"} element={<OrganizationEventDetail />} />} />
         <Route path="/events/:id" element={<EventDetail />} />
       </Routes>
     </Router>

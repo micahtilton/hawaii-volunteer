@@ -29,6 +29,7 @@ const EventDetail = () => {
   const { id } = useParams(); // Get the event ID from the URL parameters
   const event = useTracker(() => EventsCollection.findOne(id), [id]); // Fetch the event data using the ID
   const user = useTracker(() => Meteor.user(), []);
+  const organizer = useTracker(() => Meteor.users.findOne(event.organizer))
 
   if (!event) {
     return <div>Loading...</div>; // Handle loading state
@@ -72,7 +73,7 @@ const EventDetail = () => {
         {event.location}
       </p>
       <p className="mt-2 text-base text-gray-700">{event.description}</p>
-      <p className="mt-2 text-xs text-gray-500">Contact: {event.contact}</p>
+      <p className="mt-2 text-xs text-gray-500">Contact: {organizer.emails[0].address}</p>
       <p className="mt-2 text-xs text-gray-500">Start Time: {event.startDate.toLocaleString()}</p>
       <p className="mt-2 text-xs text-gray-500">End Time: {event.endDate.toLocaleString()}</p>
       <p className="mt-2 text-xs text-gray-500">Recommended Skills: {event.skills.join(', ')}</p>
