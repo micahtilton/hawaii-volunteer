@@ -72,9 +72,22 @@ export default function Profile() {
           </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt className="text-sm font-medium leading-6 text-gray-900">Bio</dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {user.bio}
-            </dd>
+            <div className="overflow-auto mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <div className="flex items-center">
+                <span>{user.bio}</span>
+                <button
+                  className="ml-2 text-indigo-600 hover:underline"
+                  onClick={() => {
+                    const newBio = prompt("Edit your bio:", user.bio);
+                    if (newBio !== null) {
+                      Meteor.call("UpdateUserBio", newBio); // Assuming you have a method to update the bio
+                    }
+                  }}
+                >
+                  Edit
+                </button>
+              </div>
+            </div>
           </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt className="text-sm font-medium leading-6 text-gray-900">
@@ -90,8 +103,29 @@ export default function Profile() {
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
               {user.skills.map((skill) => (
-                <div>{skill}</div>
+                <div key={skill} className="flex items-center">
+                  <button
+                    className="text-red-600 hover:text-red-500"
+                    onClick={() => {
+                      Meteor.call("UpdateUserSkills", skill, "remove"); // Assuming you have a method to remove the skill
+                    }}
+                  >
+                    ✖
+                  </button>
+                  <span className="ml-2">{skill}</span>
+                </div>
               ))}
+              <input
+                type="text"
+                placeholder="Add a new skill"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && e.target.value) {
+                    Meteor.call("UpdateUserSkills", e.target.value, "add"); // Assuming you have a method to add the skill
+                    e.target.value = ""; // Clear the input field
+                  }
+                }}
+                className="mt-2 border border-gray-300 rounded-md pl-2"
+              />
             </dd>
           </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
