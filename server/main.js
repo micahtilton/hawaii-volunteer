@@ -24,6 +24,23 @@ const accounts = [
     },
   },
   {
+    email: "micah@volunteer.com",
+    username: "Micah",
+    password: "changeme",
+    roles: ["USER"],
+    details: {
+      bio: "I am a passionate volunteer who loves to help the community. I enjoy participating in various events that promote environmental conservation. My goal is to make a positive impact in the lives of others. I believe in the power of teamwork and collaboration. In my free time, I enjoy hiking and exploring the beautiful landscapes of Hawaii.",
+      skills: [
+        "Teamwork",
+        "Communication",
+        "Event Planning",
+        "Environmental Awareness",
+        "First Aid",
+      ],
+      birthdate: "1990-05-15",
+    },
+  },
+  {
     email: "admin@volunteer.com",
     username: "Admin",
     password: "changeme",

@@ -63,6 +63,7 @@ export default SearchEvents = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [aiSort, setAiSort] = useState(false);
   const [sortedEvents, setSortedEvents] = useState([]);
+  const userId = useTracker(() => Meteor.userId())
 
   const events = useTracker(() => {
     return EventsCollection.find({}).fetch();
@@ -103,7 +104,7 @@ export default SearchEvents = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="m-2 p-1 pl-2 border border-gray-300 rounded"
         />
-        <span className="flex items-center">
+        {userId && <span className="flex items-center">
           <button
             onClick={(e) => {
               setAiSort(true);
@@ -112,7 +113,7 @@ export default SearchEvents = () => {
           >
             Sort with AI
           </button>
-        </span>
+        </span>}
       </div>
       {aiSort && <div className="text-center">Sorting...</div>}
       <ul role="list" className="divide-y divide-gray-200">

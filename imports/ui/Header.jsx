@@ -1,6 +1,6 @@
 import { useTracker } from "meteor/react-meteor-data";
 import { useState } from "react";
-import Link from "react-router-dom"; // Assuming you're using react-router for navigation
+import Link, { useNavigate } from "react-router-dom"; // Assuming you're using react-router for navigation
 import React from "react";
 
 import { Dialog, DialogPanel } from "@headlessui/react";
@@ -27,6 +27,8 @@ export default function Header() {
     return { ...user, roles }; // Combine user and roles into one object
   }, []);
 
+  const nav = useNavigate()
+
   const loggedIn = !!user._id;
 
   return (
@@ -40,8 +42,8 @@ export default function Header() {
             <span className="sr-only">Your Company</span>
             <img
               alt=""
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              className="h-8 w-auto"
+              src="logo.png"
+              className="h-10 w-auto rounded-full"
             />
           </a>
         </div>
@@ -87,6 +89,7 @@ export default function Header() {
               onClick={(e) => {
                 e.preventDefault();
                 Meteor.logout();
+                nav("/")
               }}
             >
               Log out <span aria-hidden="true">&rarr;</span>
