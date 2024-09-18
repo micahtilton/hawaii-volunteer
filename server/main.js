@@ -10,19 +10,34 @@ const accounts = [
     email: "user@volunteer.com",
     username: "User",
     password: "changeme",
-    roles: ["USER"]
+    roles: ["USER"],
+    details: {
+      bio: "I am a passionate volunteer who loves to help the community. I enjoy participating in various events that promote environmental conservation. My goal is to make a positive impact in the lives of others. I believe in the power of teamwork and collaboration. In my free time, I enjoy hiking and exploring the beautiful landscapes of Hawaii.",
+      skills: ["Teamwork", "Communication", "Event Planning", "Environmental Awareness", "First Aid"],
+      birthdate: "1990-05-15"
+    }
   },
   {
     email: "admin@volunteer.com",
     username: "Admin",
     password: "changeme",
-    roles: ["ADMIN"]
+    roles: ["ADMIN"],
+    details: {
+      bio: "As an admin, I oversee volunteer activities and ensure everything runs smoothly. I have a strong background in management and organization. My passion lies in connecting volunteers with meaningful opportunities. I strive to create a welcoming environment for all participants. Outside of work, I enjoy reading and gardening.",
+      skills: ["Leadership", "Organization", "Problem Solving", "Public Speaking", "Networking"],
+      birthdate: "1985-08-22"
+    }
   },
   {
     email: "organization@volunteer.com",
     username: "Organization",
     password: "changeme",
-    roles: ["ORG"]
+    roles: ["ORG"],
+    details: {
+      bio: "I represent an organization dedicated to community service and environmental protection. We work with volunteers to create impactful projects that benefit the local community. My role involves coordinating events and managing volunteer resources. I am committed to fostering a culture of service and sustainability. In my spare time, I love to travel and learn about different cultures.",
+      skills: ["Project Management", "Community Engagement", "Fundraising", "Sustainability Practices", "Cultural Awareness"],
+      birthdate: "1992-11-30"
+    }
   },
 ]
 
@@ -80,6 +95,7 @@ Meteor.startup(async () => {
     accounts.forEach(async account => {
       console.log("created user: " + JSON.stringify(account))
       const id = await Accounts.createUserAsync(account)
+      await Meteor.users.updateAsync(id, {$set: account.details})
       for (const role of account.roles) {
         await Roles.createRoleAsync(role, {unlessExists: true});
       }

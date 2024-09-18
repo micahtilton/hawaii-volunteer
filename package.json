@@ -12,6 +12,7 @@
     "@headlessui/react": "^2.1.8",
     "@heroicons/react": "^2.1.5",
     "@types/meteor": "^2.9.8",
+    "@types/meteor-roles": "^1.2.39",
     "meteor-node-stubs": "^1.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
