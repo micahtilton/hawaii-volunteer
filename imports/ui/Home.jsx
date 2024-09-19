@@ -1,5 +1,6 @@
 import React from "react";
 import { useTracker } from "meteor/react-meteor-data";
+import AboutSection from "./AboutSection";
 
 export default function Home() {
     const user = useTracker(() => Meteor.user(), []);
@@ -7,11 +8,12 @@ export default function Home() {
     const heroText =
       loggedIn
         ? `Aloha mai E ${user.username}, We are happy to see you!`
-        : "ʻAʻohe hana nui ke alu ʻia";
+        : "Join us in making a difference";
   
     return (
       <div className="bg-white">
         {/* <div>{JSON.stringify(user)}</div> */}
+        <AboutSection />
         <div className="relative isolate px-6 lg:px-8 bg-slate-100">
           <div
             aria-hidden="true"

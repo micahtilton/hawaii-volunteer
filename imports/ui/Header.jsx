@@ -42,7 +42,7 @@ export default function Header() {
             <span className="sr-only">Your Company</span>
             <img
               alt=""
-              src="logo.png"
+              src="logo.jpg"
               className="h-10 w-auto rounded-full"
             />
           </a>

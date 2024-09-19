@@ -85,7 +85,7 @@ const events = [
     summary: "A community effort to clean and protect Waikiki Beach.",
     startDate: new Date("2023-11-15T09:00:00"),
     endDate: new Date("2023-11-15T12:00:00"),
-    image: "/volunteer.jpg",
+    image: "/volunteer-events/cleanup.png",
     skills: ["Teamwork", "Environmental Awareness", "Physical Fitness"],
     completed: false
   },
@@ -97,7 +97,7 @@ const events = [
     summary: "Planting native trees to restore local ecosystems.",
     startDate: new Date("2023-12-01T08:00:00"),
     endDate: new Date("2023-12-01T15:00:00"),
-    image: "/volunteer.jpg",
+    image: "/volunteer-events/tree-planting.jpg",
     skills: ["Gardening", "Environmental Awareness", "Teamwork"],
     completed: false
   },
@@ -109,7 +109,7 @@ const events = [
     summary: "Collecting food items to support local families in need.",
     startDate: new Date("2023-11-20T10:00:00"),
     endDate: new Date("2023-11-20T16:00:00"),
-    image: "/volunteer.jpg",
+    image: "/volunteer-events/food-drive.jpeg",
     skills: ["Organization", "Communication", "Teamwork"],
     completed: false
   },
@@ -121,7 +121,7 @@ const events = [
     summary: "Maintaining and learning about sustainable gardening practices.",
     startDate: new Date("2023-11-25T09:00:00"),
     endDate: new Date("2023-11-25T13:00:00"),
-    image: "/volunteer.jpg",
+    image: "/volunteer-events/gardening.jpg",
     skills: ["Gardening", "Sustainability", "Teamwork"],
     completed: false
   },
@@ -133,7 +133,7 @@ const events = [
     summary: "Workshop focused on ocean conservation and advocacy.",
     startDate: new Date("2023-12-10T13:00:00"),
     endDate: new Date("2023-12-10T16:00:00"),
-    image: "/volunteer.jpg",
+    image: "/volunteer-events/ocean-volunteer.jpg",
     skills: ["Environmental Awareness", "Public Speaking", "Teamwork"],
     completed: false
   },
